@@ -10,12 +10,8 @@ public class ApplicationCar {
 
     public static void main(String[] args) {
 
-
-        // Вариант кода с использованием Spring
-        AbstractApplicationContext context = new AnnotationConfigApplicationContext("src.app.config");
+        AbstractApplicationContext context = new AnnotationConfigApplicationContext("app.config");
         DriverAction driverAction= context.getBean(DriverAction.class);
         driverAction.performDriverAction();
-
-
     }
 }
