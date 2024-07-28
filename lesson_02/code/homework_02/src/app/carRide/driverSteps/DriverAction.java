@@ -1,15 +1,18 @@
-package homework_02.src.app.carRide.driverSteps;
+package app.carRide.driverSteps;
 
-import homework_02.src.app.carRide.Car.Driver;
+
+import app.carRide.Car.Driver;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class DriverAction {
 
+    @Autowired
     private Driver driver;
-
+    @Autowired
     private Step1 step1;
-
+    @Autowired
     private Step2 step2;
-
+    @Autowired
     private Step3 step3;
 
 
