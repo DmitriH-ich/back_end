@@ -37,7 +37,7 @@ public class CarRepositoryDB implements CarRepository {
             statment.execute(query, Statement.RETURN_GENERATED_KEYS);
             ResultSet resultSet = statment.getGeneratedKeys();
             resultSet.next();
-            //det ID from resultSet
+            //get ID from resultSet
             Long id = resultSet.getLong(1);
             car.setId(id);
             return car;
@@ -75,13 +75,6 @@ public class CarRepositoryDB implements CarRepository {
 
         try (Connection connection = getConnection()) {
 
-            // TODO домашнее задание
-            // Подсказка: нужно реализовать цикл, который работает до тех пор,
-            // пока не закончатся данные в resultSet, то есть до тех пор, пока
-            // его метод next() не вернёт false.
-            // До этого момента работаем в цикле и все автомобили складываем
-            // в результирующий лист
-
             List<Car> cars = new ArrayList<>();
 
             String query = "SELECT * FROM cars;";
@@ -105,16 +98,21 @@ public class CarRepositoryDB implements CarRepository {
     public Car update(Car car) {
         try(Connection connection = getConnection()){
             // TODO домашнее задание (изменению подлежит только цена)
-        } catch (Exception e){
-            throw new RuntimeException();
+            String query = String.format("UPDATE cars SET price = %s WHERE id = %d;", car.getPrice(), car.getId());
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(query);
+            return car;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override
     public void delete(Long id) {
         try(Connection connection = getConnection()){
-
+            String query = String.format("DELETE FROM cars WHERE id = %d;", id);
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(query);
         } catch (Exception e){
             throw new RuntimeException();
         }

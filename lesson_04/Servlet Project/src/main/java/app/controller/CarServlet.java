@@ -67,6 +67,10 @@ public class CarServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // TODO домашнее задание
+        ObjectMapper mapper = new ObjectMapper();
+        Car car = mapper.readValue(req.getReader(), Car.class);
+        repository.update(car);
+        resp.getWriter().write(car.toString());
     }
 
     // Удаление автомобиля из БД
@@ -75,5 +79,13 @@ public class CarServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // TODO домашнее задание
+        Map<String, String[]> params = req.getParameterMap();
+        if (params.containsKey("id")) {
+            Long id = Long.parseLong(params.get("id")[0]);
+            repository.delete(id);
+            resp.getWriter().write("Car deleted successfully");
+        } else {
+            resp.getWriter().write("Missing id parameter");
+        }
     }
 }

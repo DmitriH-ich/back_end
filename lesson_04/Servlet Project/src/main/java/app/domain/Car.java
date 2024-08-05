@@ -49,6 +49,9 @@ public class Car {
         return year;
     }
 
+    public Long getId() {
+        return id;
+    }
 
     @Override
     public boolean equals(Object o) {
