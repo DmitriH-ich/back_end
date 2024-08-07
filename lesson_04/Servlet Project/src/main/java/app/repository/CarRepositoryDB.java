@@ -19,9 +19,6 @@ public class CarRepositoryDB implements CarRepository {
         try {
             Class.forName(DB_DRIVER_PATH);
 
-            // http://10.1.2.3:8080/carss?id=3
-            // это URI для http-запроса, URI для подключения к БД выглядит аналогично:
-            // jdbc:postgresql://localhost:5432/cars_db?user=postgres&password=ppp77777
             String dbUrl = String.format("%s%s?user=%s&password=%s", DB_ADDRESS, DB_NAME, DB_USERNAME, DB_PASSWORD);
             return DriverManager.getConnection(dbUrl);
         } catch (Exception e) {
@@ -37,7 +34,6 @@ public class CarRepositoryDB implements CarRepository {
             statment.execute(query, Statement.RETURN_GENERATED_KEYS);
             ResultSet resultSet = statment.getGeneratedKeys();
             resultSet.next();
-            //get ID from resultSet
             Long id = resultSet.getLong(1);
             car.setId(id);
             return car;
@@ -97,10 +93,11 @@ public class CarRepositoryDB implements CarRepository {
     @Override
     public Car update(Car car) {
         try(Connection connection = getConnection()){
-            // TODO домашнее задание (изменению подлежит только цена)
+
             String query = String.format("UPDATE cars SET price = %s WHERE id = %d;", car.getPrice(), car.getId());
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
+            // oder:  connection.createStatment().execute();
             return car;
         } catch (Exception e) {
             throw new RuntimeException(e);
