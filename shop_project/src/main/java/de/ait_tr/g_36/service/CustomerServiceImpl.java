@@ -2,7 +2,6 @@ package de.ait_tr.g_36.service;
 
 
 import de.ait_tr.g_36.domain.entity.Customer;
-import de.ait_tr.g_36.domain.entity.Product;
 import de.ait_tr.g_36.service.interfaces.CustomerService;
 import org.springframework.stereotype.Service;
 
@@ -12,69 +11,68 @@ import java.util.List;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-
     @Override
-    public Customer saveCustomer(Customer customer) {
-        return customer;
+    public Customer save(Customer customer) {
+        return null;
     }
 
     @Override
     public List<Customer> getAllActiveCustomers() {
-        return List.of();
-    }
-
-    @Override
-    public Customer getCustomerById(Long id) {
         return null;
     }
 
     @Override
-    public Customer updateCustomer(Long id, Customer customer) {
-        return customer;
-    }
-
-    @Override
-    public void deleteCustomerById(Long id) {
-
-    }
-
-    @Override
-    public void deleteCustomerByName(String name) {
-
-    }
-
-    @Override
-    public Customer restoreCustomerById(Long id) {
+    public Customer getById(Long id) {
         return null;
     }
 
     @Override
-    public int getActiveCustomerCount() {
+    public Customer update(Customer customer) {
+        return null;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+
+    }
+
+    @Override
+    public void deleteByName(String name) {
+
+    }
+
+    @Override
+    public void restoreById(Long id) {
+
+    }
+
+    @Override
+    public long getActiveCustomersNumber() {
         return 0;
     }
 
     @Override
-    public BigDecimal getCartTotalPrice(Long customerId) {
+    public BigDecimal getTotalCostOfCustomersProducts(Long customerId) {
         return null;
     }
 
     @Override
-    public BigDecimal getCartAveragePrice(Long customerId) {
+    public BigDecimal getAverageCostOfCustomersProducts(Long customerId) {
         return null;
     }
 
     @Override
-    public void addProductToCart(Long customerId, Product product) {
+    public void addProductToCustomersCart(Long customerId, Long productId) {
 
     }
 
     @Override
-    public void removeProductFromCart(Long customerId, Long productId) {
+    public void removeProductFromCustomersCart(Long customerId, Long productId) {
 
     }
 
     @Override
-    public void clearCart(Long customerId) {
+    public void clearCustomersCart(Long customerId) {
 
     }
 }

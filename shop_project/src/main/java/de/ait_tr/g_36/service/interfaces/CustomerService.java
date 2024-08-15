@@ -7,18 +7,18 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface CustomerService {
-    Customer saveCustomer(Customer customer);
+    Customer save(Customer customer);
     List<Customer> getAllActiveCustomers();
-    Customer getCustomerById(Long id);
-    Customer updateCustomer(Long id, Customer customer);
-    void deleteCustomerById(Long id);
-    void deleteCustomerByName(String name);
-    Customer restoreCustomerById(Long id);
-    int getActiveCustomerCount();
-    BigDecimal getCartTotalPrice(Long customerId);
-    BigDecimal getCartAveragePrice(Long customerId);
-    void addProductToCart(Long customerId, Product product);
-    void removeProductFromCart(Long customerId, Long productId);
-    void clearCart(Long customerId);
+    Customer getById(Long id);
+    Customer update(Customer customer);
+    void deleteById(Long id);
+    void deleteByName(String name);
+    void restoreById(Long id);
+    long getActiveCustomersNumber();
+    BigDecimal getTotalCostOfCustomersProducts(Long customerId);
+    BigDecimal getAverageCostOfCustomersProducts(Long customerId);
+    void addProductToCustomersCart(Long customerId, Long productId);
+    void removeProductFromCustomersCart(Long customerId, Long productId);
+    void clearCustomersCart(Long customerId);
 }
 

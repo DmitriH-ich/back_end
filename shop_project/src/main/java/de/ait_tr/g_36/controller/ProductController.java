@@ -31,7 +31,7 @@ public class ProductController {
     public List<Product> get(@RequestParam(required = false)Long id){
     //обращаемся к сервису, просим все продукты или по id
         if(id == null){
-            return service.getAllProducts();
+            return service.getAllActiveProducts();
         }else{
             Product product = service.getById(id);
             return product == null ? null : List.of(product);
@@ -42,7 +42,8 @@ public class ProductController {
         return service.update(product);
     }
     @DeleteMapping()
-    public void delete(@RequestParam(required = false)Long id, @RequestParam(required = false) String title){
+    public void delete(@RequestParam(required = false)Long id,
+                       @RequestParam(required = false) String title){
         if(id != null){
             service.deleteById(id);
         }else if(title != null){
