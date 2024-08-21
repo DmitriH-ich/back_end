@@ -13,3 +13,7 @@ spring:
       hibernate:
         auto_quote_keyword: true
 
+  key:
+    access: u6IWyTFLVdjo0lv58z/jdQlBfoL970Ty8neqaM+D6/g=
+    refresh: qzc/VaTdtsoo8cnZlogRiYIr7CqTtJOufkj60hELFQQ=
+

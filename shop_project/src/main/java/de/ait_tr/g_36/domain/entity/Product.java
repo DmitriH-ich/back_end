@@ -21,12 +21,15 @@ public class Product {
             accessMode = Schema.AccessMode.READ_ONLY
     )
     private Long id;
+
     @Column(name = "title")
     @Schema(description = "Product title", example = "banana") // add for Swagger
     private String title;
+
     @Column(name = "price")
     @Schema(description = "Product price", example = "190.00") // add for Swagger
     private BigDecimal price;
+
     @Column(name = "active")
     private boolean active;
 
@@ -34,28 +37,28 @@ public class Product {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
     public boolean isActive() {
         return active;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public void setActive(boolean active) {
@@ -74,6 +77,7 @@ public class Product {
     public int hashCode() {
         return Objects.hash(id, title, price, active);
     }
+
     @Override
     public String toString() {
         return String.format("Product: id - %d, title - %s, price - %s, active - %s",

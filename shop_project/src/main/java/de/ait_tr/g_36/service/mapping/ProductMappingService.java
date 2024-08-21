@@ -16,7 +16,7 @@ public interface ProductMappingService {
 
     ProductDto mapEntityToDto(Product entity);
 
-
+}
 
 /*    public Product mapDtoToEntry(ProductDto dto) {
         Product entity = new Product();
@@ -32,4 +32,4 @@ public interface ProductMappingService {
         dto.setPrice(entity.getPrice());
         return dto;
     }*/
-}
+
