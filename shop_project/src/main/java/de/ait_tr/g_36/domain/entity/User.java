@@ -31,6 +31,8 @@ public class User implements UserDetails {
     inverseJoinColumns = @JoinColumn(name = "role_id"))
 
     private Set<Role> roles;
+
+
     public Long getId() {
         return id;
     }
@@ -38,7 +40,7 @@ public class User implements UserDetails {
     public void setId(Long id) {
         this.id = id;
     }
-
+    // появился где то с урока 12. До этого был только getUsername ну и сеттеры тоже
     public String getName() {
         return username;
     }
@@ -89,6 +91,18 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         return String.format("User: id - %d, username - %s, roles - %s", id, username, roles == null ? "empty" : roles);
+    }
+
+    // при написании теста в ProductControllerTest пришла ошибка-добавил по подсказке, но потом дополнил как надо
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+// при написании теста в ProductControllerTest пришла ошибка-добавил по подсказке, но потом дополнил как надо
+/*    public void setRoles(Set<Role> roleAdmin) {
+    }*/
+    public void setRoles(Set<Role> roles) {
+    this.roles = roles;
     }
 
 //     Метод для получения зашифрованного пароля

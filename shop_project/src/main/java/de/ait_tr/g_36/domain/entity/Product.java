@@ -64,6 +64,10 @@ public class Product {
     public void setActive(boolean active) {
         this.active = active;
     }
+    // ------------------------ for testing -------------------------------------------
+/*    public void setName(String name){
+        this.name = name;
+    }*/
 
     @Override
     public boolean equals(Object o) {
