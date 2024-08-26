@@ -1,5 +1,6 @@
 package de.ait_tr.g_36.service.interfaces;
 
+import de.ait_tr.g_36.domain.dto.CustomerDto;
 import de.ait_tr.g_36.domain.entity.Customer;
 import de.ait_tr.g_36.domain.entity.Product;
 
@@ -7,10 +8,11 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface CustomerService {
-    Customer save(Customer customer);
-    List<Customer> getAllActiveCustomers();
-    Customer getById(Long id);
-    Customer update(Customer customer);
+
+    CustomerDto save(CustomerDto customer);
+    List<CustomerDto> getAllActiveCustomers();
+    CustomerDto getById(Long id);
+    CustomerDto update(CustomerDto customer);
     void deleteById(Long id);
     void deleteByName(String name);
     void restoreById(Long id);

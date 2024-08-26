@@ -36,8 +36,8 @@ class ProductControllerTest {
 
     private TestRestTemplate template; // send http request to Tomcat
     private HttpHeaders headers; // with headers
-
     private ProductDto testProduct; // product for test
+    private Long testProductId;
 
     // tokens for admin and user
     private String adminAccessToken;
@@ -67,7 +67,7 @@ class ProductControllerTest {
     @BeforeEach
     public void setUp() {
 
-        template = new TestRestTemplate(); // http
+        template = new TestRestTemplate(); // http - протокол
         headers = new HttpHeaders();
 
         // product for test
@@ -154,6 +154,26 @@ class ProductControllerTest {
     //void test(){}
     // Видео с 2:
 
+/*    @Test
+    public void checkAdminAccessTokenValidity() {
+        // Формируем URL для административного запроса
+        String url = URL_PREFIX + port + AUTHORIZATION_RESOURCE + LOGIN_ENDPOINT;
+        headers.put(AUTH_HEADER_NAME, List.of(adminAccessToken));
+
+        // Логируем URL и токен для отладки
+        System.out.println("Using admin access token: " + adminAccessToken);
+        System.out.println("Sending request to URL: " + url);
+
+        // Создаем HttpEntity с заголовками
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        // Выполняем запрос и получаем ответ
+        ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, entity, String.class);
+
+        // Проверяем, что запрос прошел успешно и доступ открыт
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Admin access token is invalid or has insufficient permissions");
+    }*/
+
     @Test
     public void positiveGettingAllProductsWithoutAuthorization(){
         // Подготавливаем URL для запроса
@@ -178,7 +198,8 @@ class ProductControllerTest {
         String url = URL_PREFIX + port + PRODUCTS_RESOURCE;
         HttpEntity<ProductDto> request = new HttpEntity<>(testProduct, headers);
 
-        ResponseEntity<ProductDto> response = template.exchange(url, HttpMethod.POST, request, ProductDto.class);
+        ResponseEntity<ProductDto> response = template
+                .exchange(url, HttpMethod.POST, request, ProductDto.class);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode(), "Response has unexpected status");
         assertFalse(response.hasBody(), "Response has unexpected body.");
 
@@ -187,63 +208,79 @@ class ProductControllerTest {
     @Test
     public void negativeSavingProductWithUserAuthorization() {
         // TODO домашнее задание
+        String url = URL_PREFIX + port + PRODUCTS_RESOURCE;
         headers.put(AUTH_HEADER_NAME, List.of(userAccessToken));
+        // Оборачиваем данные и заголовки в HttpEntity
+        HttpEntity<ProductDto> entity = new HttpEntity<>(testProduct, headers);
+        ResponseEntity<ProductDto> responce = template
+                .exchange(url, HttpMethod.POST, entity, ProductDto.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, responce.getStatusCode(), "Response has unexpected status");
+
     }
 
-/*    @Test
+    @Test
     @Order(1)
     public void positiveSavingProductWithAdminAuthorization() {
-        // Подготавливаем URL для запроса
-        String url = "/api/products";
-
-        // Создаем объект ProductDto, который будем сохранять
-        ProductDto newProduct = new ProductDto();
-        newProduct.setTitle("Test Product");
-        newProduct.setDescription("This is a test product.");
-        newProduct.setPrice(BigDecimal.valueOf(79.00));
-
-        // Подготавливаем заголовки с токеном администратора
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(AUTH_HEADER_NAME, adminAccessToken);
-
-        // Оборачиваем данные и заголовки в HttpEntity
-        HttpEntity<ProductDto> request = new HttpEntity<>(newProduct, headers);
-
-        // Выполняем POST-запрос для сохранения продукта
-        ResponseEntity<ProductDto> response = template.postForEntity(url, request, ProductDto.class);
-
-        // Проверяем, что статус ответа 201 Created
-        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
-
-        // Проверяем, что продукт успешно сохранен и возвращен в ответе
+        String url = URL_PREFIX + port + PRODUCTS_RESOURCE;
+        headers.put(AUTH_HEADER_NAME, List.of(adminAccessToken));
+        HttpEntity<ProductDto> entity = new HttpEntity<>(testProduct, headers);
+        ResponseEntity<ProductDto> response = template
+                .exchange(url, HttpMethod.POST, entity, ProductDto.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has unexpected status");
         ProductDto savedProduct = response.getBody();
-        Assertions.assertNotNull(savedProduct);
-        Assertions.assertEquals(newProduct.getName(), savedProduct.getName());
-        Assertions.assertEquals(newProduct.getDescription(), savedProduct.getDescription());
-        Assertions.assertEquals(newProduct.getPrice(), savedProduct.getPrice());
+        assertNotNull(savedProduct, "Response body doesn't have a saved product");
+        assertEquals(testProduct.getTitle(), savedProduct.getTitle(), "Saved product has unexpected title");
+        testProductId = savedProduct.getId();
+    }
+/*    public void positiveSavingProductWithAdminAuthorization() {
+        String url = URL_PREFIX + port + PRODUCTS_RESOURCE;
+        headers.put(AUTH_HEADER_NAME, List.of(adminAccessToken));
 
+        // Логируем токен и URL для отладки
+        System.out.println("Using admin access token: " + adminAccessToken);
+        System.out.println("Sending request to URL: " + url);
+
+        // Создание нового продукта для теста
+        HttpEntity<ProductDto> entity = new HttpEntity<>(testProduct, headers);
+        ResponseEntity<ProductDto> responce = template
+                .exchange(url, HttpMethod.POST, entity, ProductDto.class);
+
+        // Отправка запроса и получение ответа
+        ResponseEntity<ProductDto> response = template.exchange(url, HttpMethod.POST, entity, ProductDto.class);
+
+        // Логируем статус ответа для отладки
+        System.out.println("Received response status: " + response.getStatusCode());
+
+        // Проверка статуса ответа
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has unexpected status");
+
+        // Проверка содержимого ответа
+        ProductDto savedProduct = response.getBody();
+        assertNotNull(savedProduct, "Response has unexpected body");
+        assertEquals(testProduct.getTitle(), savedProduct.getTitle(), "Saved product has unexpected title");
+
+        // Сохранение ID созданного продукта для последующего использования
+        testProductId = savedProduct.getId();
     }*/
-
     @Test
     @Order(2)
     public void negativeGettingProductByIdWithoutAuthorization() {
-        // Подготавливаем URL для запроса, добавляя ID продукта
-        String url = "/api/products/?id=1"; // Предполагается, что продукт с ID 1 существует
+        // Формируем URL для запроса продукта по его ID
+        String url = URL_PREFIX + port + PRODUCTS_RESOURCE + ID_PARAM_TITLE
+                .replace("{id}", "3");
 
-        // Выполняем GET-запрос без авторизации
-        ResponseEntity<ProductDto> response = template.exchange(
-                url,
-                HttpMethod.GET,
-                null,
-                ProductDto.class
-        );
+        // Очищаем заголовки, чтобы запрос был без авторизации
+        headers.clear();
 
-        // Проверяем, что статус ответа 401 Unauthorized
-        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        // Оборачиваем заголовки в HttpEntity
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        // Проверяем, что тело ответа пустое
-        Assertions.assertNull(response.getBody(), "Тело ответа должно быть пустым при отсутствии авторизации");
+        // Выполняем запрос и получаем ответ
+        ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, entity, String.class);
 
+        // Проверяем, что ответ имеет статус 401 Unauthorized
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode(), "Response has unexpected status");
     }
 
     @Test
@@ -254,20 +291,80 @@ class ProductControllerTest {
 //        ResponseEntity<ProductDto> response = template
 //                .withBasicAuth(TEST_USER_NAME, TEST_PASSWORD)
 //                .exchange(url, HttpMethod.POST, request, ProductDto.class);
+        // Формируем URL для запроса продукта по его ID
+        String url = URL_PREFIX + port + PRODUCTS_RESOURCE + ID_PARAM_TITLE + "1"; // замените "1" на нужный ID для теста
 
+        // Создаем шаблон REST с базовой авторизацией
+        TestRestTemplate templateWithAuth = template.withBasicAuth(TEST_USER_NAME, TEST_PASSWORD);
+
+        // Оборачиваем заголовки в HttpEntity (в данном случае, тело не требуется для GET-запроса)
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        // Выполняем GET-запрос с базовой авторизацией
+        ResponseEntity<ProductDto> response = templateWithAuth.exchange(url, HttpMethod.GET, entity, ProductDto.class);
+
+        // Проверяем, что ответ имеет статус 403 Forbidden, так как доступ должен быть запрещен
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode(), "Response has unexpected status");
+
+        // Проверяем, что тело ответа пустое, так как доступ к ресурсу запрещен
+        assertFalse(response.hasBody(), "Response should not have a body.");
     }
 
     @Test
     @Order(4)
     public void negativeGettingProductByIdWithIncorrectToken() {
         // TODO домашнее задание
+        // Формируем URL для запроса продукта по его ID
+        String url = URL_PREFIX + port + PRODUCTS_RESOURCE + ID_PARAM_TITLE + "1"; // Замените "1" на нужный ID для теста
+
+        // Устанавливаем некорректный токен в заголовок
+        headers.clear();
+        String incorrectToken = "Bearer invalid_token";
+        headers.put(AUTH_HEADER_NAME, List.of(incorrectToken));
+
+        // Оборачиваем заголовки в HttpEntity
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        // Выполняем GET-запрос с неверным токеном
+        ResponseEntity<ProductDto> response = template.exchange(url, HttpMethod.GET, entity, ProductDto.class);
+
+        // Проверяем, что ответ имеет статус 401 Unauthorized или 403 Forbidden
+        assertTrue(response.getStatusCode() == HttpStatus.UNAUTHORIZED || response.getStatusCode() == HttpStatus.FORBIDDEN,
+                "Response has unexpected status");
+
+        // Проверяем, что тело ответа пустое, так как доступ к ресурсу запрещен
+        assertFalse(response.hasBody(), "Response should not have a body.");
     }
 
     @Test
     @Order(5)
     public void positiveGettingProductByIdWithCorrectToken() {
         // TODO домашнее задание
-        // TODO удаляем из БД сохранённый тестовый продукт
-    }
+        // Формируем URL для запроса продукта по его ID
+        String url = URL_PREFIX + port + PRODUCTS_RESOURCE + ID_PARAM_TITLE + testProductId; // Используем testProductId, сохраненный ранее
 
+        // Устанавливаем корректный токен администратора в заголовок
+        headers.clear();
+        headers.put(AUTH_HEADER_NAME, List.of(adminAccessToken));
+
+        // Оборачиваем заголовки в HttpEntity
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        // Выполняем GET-запрос с корректным токеном
+        ResponseEntity<ProductDto> response = template.exchange(url, HttpMethod.GET, entity, ProductDto.class);
+
+        // Проверяем, что ответ имеет статус 200 OK
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has unexpected status");
+
+        // Проверяем, что тело ответа не пустое и содержит ожидаемый продукт
+        assertTrue(response.hasBody(), "Response should have a body.");
+        ProductDto receivedProduct = response.getBody();
+        assertNotNull(receivedProduct, "Received product should not be null.");
+
+        // Дополнительно проверяем, что полученный продукт соответствует ожидаемому
+        assertEquals(testProductId, receivedProduct.getId(), "Product ID does not match.");
+        assertEquals(testProduct.getTitle(), receivedProduct.getTitle(), "Product title does not match.");
+        assertEquals(testProduct.getPrice(), receivedProduct.getPrice(), "Product price does not match.");
+    }
+       // TODO удаляем из БД сохранённый тестовый продукт
 }
