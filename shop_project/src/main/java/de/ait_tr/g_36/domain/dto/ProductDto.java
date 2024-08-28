@@ -62,9 +62,16 @@ public class ProductDto {
         return Objects.hash(id, title, price);
     }
 
-    @Override
+/*    @Override
     public String toString() {
         return String.format("Product: id - %d, title - %s, price - %d",
                 id, title, price );
-    }
+    }*/
+@Override
+public String toString() {
+    return String.format("ProductDto{id=%s, title='%s', price=%s}",
+            id != null ? id : "null",
+            title != null ? title : "null",
+            price != null ? String.format("%.2f", price) : "null");
+}
 }

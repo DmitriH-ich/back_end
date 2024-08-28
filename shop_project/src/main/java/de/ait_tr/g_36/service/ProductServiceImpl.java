@@ -39,11 +39,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto getById(Long id) {
         Product product = repository.findById(id).orElse(null);
-        if(product != null && product.isActive()){
+        if( product != null && product.isActive()){
             return mappingService.mapEntityToDto(product);
         }
         return null;
-        }
+    }
 
     @Override
     public ProductDto update(ProductDto product) {
@@ -52,13 +52,27 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
+
+    @Override
+    public void deleteByTitle(String title) {
+        Product product = repository.findByTitle(title);
+        if (product != null) {
+            repository.delete(product);
+        }
+    }
+
+
+/*    @Override
+    public void deleteById(Long id) {
 
     }
 
     @Override
     public void deleteByTitle(String title) {
 
-    }
+    }*/
 
     @Override
     public void restoreById(Long id) {

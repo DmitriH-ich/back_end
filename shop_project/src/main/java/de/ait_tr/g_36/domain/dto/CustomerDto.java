@@ -14,7 +14,6 @@ public class CustomerDto {
 
     private String name;
 
-
     private CartDto cart;
 
     public CartDto getCart() {

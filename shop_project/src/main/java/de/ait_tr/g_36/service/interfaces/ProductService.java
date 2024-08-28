@@ -1,7 +1,6 @@
 package de.ait_tr.g_36.service.interfaces;
 
 import de.ait_tr.g_36.domain.dto.ProductDto;
-import de.ait_tr.g_36.domain.entity.Product;
 
 import java.math.BigDecimal;
 import java.util.List;

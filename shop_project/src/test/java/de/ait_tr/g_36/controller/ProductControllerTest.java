@@ -1,9 +1,11 @@
 package de.ait_tr.g_36.controller;
 
+
 import de.ait_tr.g_36.domain.dto.ProductDto;
 import de.ait_tr.g_36.domain.entity.Product;
 import de.ait_tr.g_36.domain.entity.Role;
 import de.ait_tr.g_36.domain.entity.User;
+import de.ait_tr.g_36.repository.ProductRepository;
 import de.ait_tr.g_36.repository.RoleRepository;
 import de.ait_tr.g_36.repository.UserRepository;
 import de.ait_tr.g_36.security.sec_dto.TokenResponseDto;
@@ -39,6 +41,9 @@ class ProductControllerTest {
     private ProductDto testProduct; // product for test
     private Long testProductId;
 
+    @Autowired
+    private ProductRepository productRepository; // Добавляем ProductRepository
+
     // tokens for admin and user
     private String adminAccessToken;
     private String userAccessToken;
@@ -46,7 +51,7 @@ class ProductControllerTest {
     private final String ADMIN_ROLE_TITLE = "ROLE_ADMIN"; //
     private final String USER_ROLE_TITLE = "ROLE_USER"; //
 
-    private final String TEST_PRODUCT_TITLE = "Test product";
+    private final String TEST_PRODUCT_TITLE = "Test product 1";
     private final BigDecimal TEST_PRODUCT_PRICE = new BigDecimal(99);
 
     private final String TEST_ADMIN_NAME = "Test Admin";
@@ -61,11 +66,12 @@ class ProductControllerTest {
     private final String ALL_ENDPOINT = "/all";
     private final String ID_PARAM_TITLE = "?id=";
 
-    private final String BEARER_PREFIX = "Bearer";
+    private final String BEARER_PREFIX = "Bearer ";
     private final String AUTH_HEADER_NAME = "Authorization";
 
     @BeforeEach
     public void setUp() {
+
 
         template = new TestRestTemplate(); // http - протокол
         headers = new HttpHeaders();
@@ -147,32 +153,13 @@ class ProductControllerTest {
                 .exchange(url, HttpMethod.POST, request, TokenResponseDto.class);
         assertTrue(response.hasBody(), "Authorization response body is empty");
         userAccessToken = BEARER_PREFIX + response.getBody().getAccessToken();
+
     }
+
 
     // ниже этого теста к моменту запуска ничего не было. Были поставлены BreackPoint-ы и после теста Выключены(Mute)
     //@Test
     //void test(){}
-    // Видео с 2:
-
-/*    @Test
-    public void checkAdminAccessTokenValidity() {
-        // Формируем URL для административного запроса
-        String url = URL_PREFIX + port + AUTHORIZATION_RESOURCE + LOGIN_ENDPOINT;
-        headers.put(AUTH_HEADER_NAME, List.of(adminAccessToken));
-
-        // Логируем URL и токен для отладки
-        System.out.println("Using admin access token: " + adminAccessToken);
-        System.out.println("Sending request to URL: " + url);
-
-        // Создаем HttpEntity с заголовками
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        // Выполняем запрос и получаем ответ
-        ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, entity, String.class);
-
-        // Проверяем, что запрос прошел успешно и доступ открыт
-        assertEquals(HttpStatus.OK, response.getStatusCode(), "Admin access token is invalid or has insufficient permissions");
-    }*/
 
     @Test
     public void positiveGettingAllProductsWithoutAuthorization(){
@@ -219,9 +206,9 @@ class ProductControllerTest {
 
     }
 
-    @Test
-    @Order(1)
-    public void positiveSavingProductWithAdminAuthorization() {
+   @Test
+   @Order(1)
+/*    public void positiveSavingProductWithAdminAuthorization() {
         String url = URL_PREFIX + port + PRODUCTS_RESOURCE;
         headers.put(AUTH_HEADER_NAME, List.of(adminAccessToken));
         HttpEntity<ProductDto> entity = new HttpEntity<>(testProduct, headers);
@@ -232,37 +219,25 @@ class ProductControllerTest {
         assertNotNull(savedProduct, "Response body doesn't have a saved product");
         assertEquals(testProduct.getTitle(), savedProduct.getTitle(), "Saved product has unexpected title");
         testProductId = savedProduct.getId();
-    }
-/*    public void positiveSavingProductWithAdminAuthorization() {
-        String url = URL_PREFIX + port + PRODUCTS_RESOURCE;
-        headers.put(AUTH_HEADER_NAME, List.of(adminAccessToken));
-
-        // Логируем токен и URL для отладки
-        System.out.println("Using admin access token: " + adminAccessToken);
-        System.out.println("Sending request to URL: " + url);
-
-        // Создание нового продукта для теста
-        HttpEntity<ProductDto> entity = new HttpEntity<>(testProduct, headers);
-        ResponseEntity<ProductDto> responce = template
-                .exchange(url, HttpMethod.POST, entity, ProductDto.class);
-
-        // Отправка запроса и получение ответа
-        ResponseEntity<ProductDto> response = template.exchange(url, HttpMethod.POST, entity, ProductDto.class);
-
-        // Логируем статус ответа для отладки
-        System.out.println("Received response status: " + response.getStatusCode());
-
-        // Проверка статуса ответа
-        assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has unexpected status");
-
-        // Проверка содержимого ответа
-        ProductDto savedProduct = response.getBody();
-        assertNotNull(savedProduct, "Response has unexpected body");
-        assertEquals(testProduct.getTitle(), savedProduct.getTitle(), "Saved product has unexpected title");
-
-        // Сохранение ID созданного продукта для последующего использования
-        testProductId = savedProduct.getId();
     }*/
+   public void positiveSavingProductWithAdminAuthorization() {
+       String url = URL_PREFIX + port + PRODUCTS_RESOURCE;
+       headers.put(AUTH_HEADER_NAME, List.of(adminAccessToken));
+       HttpEntity<ProductDto> entity = new HttpEntity<>(testProduct, headers);
+
+       // Изменение: Добавлены логгирование и правильная проверка статуса
+       ResponseEntity<ProductDto> response = template.exchange(url, HttpMethod.POST, entity, ProductDto.class);
+
+       System.out.println("Received response status: " + response.getStatusCode()); // Изменено: Логируем статус ответа
+       assertEquals(HttpStatus.OK, response.getStatusCode(), "Response has unexpected status");
+
+       ProductDto savedProduct = response.getBody();
+       assertNotNull(savedProduct, "Response has unexpected body");
+       assertEquals(testProduct.getTitle(), savedProduct.getTitle(), "Saved product has unexpected title");
+
+       testProductId = savedProduct.getId(); // Изменено: Сохранение ID созданного продукта
+       System.out.println("testProductID from upTest: " + testProductId); // Изменено: Логирование ID продукта
+   }
     @Test
     @Order(2)
     public void negativeGettingProductByIdWithoutAuthorization() {
@@ -341,6 +316,7 @@ class ProductControllerTest {
     public void positiveGettingProductByIdWithCorrectToken() {
         // TODO домашнее задание
         // Формируем URL для запроса продукта по его ID
+        System.out.println("testProductID: " + testProductId);
         String url = URL_PREFIX + port + PRODUCTS_RESOURCE + ID_PARAM_TITLE + testProductId; // Используем testProductId, сохраненный ранее
 
         // Устанавливаем корректный токен администратора в заголовок
@@ -366,5 +342,51 @@ class ProductControllerTest {
         assertEquals(testProduct.getTitle(), receivedProduct.getTitle(), "Product title does not match.");
         assertEquals(testProduct.getPrice(), receivedProduct.getPrice(), "Product price does not match.");
     }
-       // TODO удаляем из БД сохранённый тестовый продукт
+
+
+
+
+                            // TODO удаляем из БД сохранённый тестовый продукт
+
+
+/*        @AfterEach
+    public void cleanUp() {
+            System.out.println("ProductID = " + testProductId);
+            if (testProductId != null) {
+                // Удаляем продукт по ID
+                productRepository.deleteById(testProductId);
+
+                // Проверяем, что продукт был удален
+                boolean productExists = productRepository.existsById(testProductId);
+                assertFalse(productExists, "Test product was not deleted from the database.");
+                testProductId = null;
+            }
+
+        }*/
+       @AfterEach
+       public void cleanUp() {
+           if (testProductId != null) {
+               // Формируем URL для удаления продукта по его ID
+               String url = URL_PREFIX + port + PRODUCTS_RESOURCE + ID_PARAM_TITLE + testProductId;
+
+               // Устанавливаем корректный токен администратора в заголовок
+               headers.clear();
+               headers.put(AUTH_HEADER_NAME, List.of(adminAccessToken));
+
+               // Оборачиваем заголовки в HttpEntity
+               HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+               // Выполняем DELETE-запрос для удаления продукта
+               ResponseEntity<Void> response = template.exchange(url, HttpMethod.DELETE, entity, Void.class);
+
+               // Проверяем, что продукт был успешно удален (например, статус 200 OK)
+               assertEquals(HttpStatus.OK, response.getStatusCode(), "Failed to delete the test product.");
+
+               // Сбрасываем ID тестового продукта
+               testProductId = null;
+           }
+
+       }
+
+
 }

@@ -6,8 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service    - деактивировал т.к. в ProductServiceImpl ругался mappingService
 @Mapper(componentModel = "spring")
+
 public interface ProductMappingService {
 
     @Mapping(target = "id", ignore = true)
