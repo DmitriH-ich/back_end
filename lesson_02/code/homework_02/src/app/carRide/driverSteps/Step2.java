@@ -1,11 +1,14 @@
-package homework_02.src.app.carRide.driverSteps;
+package app.carRide.driverSteps;
 
-import homework_02.src.app.carRide.Car.startOfMotor.CarIgnition;
-import homework_02.src.app.carRide.Car.startOfMotor.MotorStart;
+
+import app.carRide.Car.startOfMotor.CarIgnition;
+import app.carRide.Car.startOfMotor.MotorStart;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class Step2 {
+    @Autowired
     private CarIgnition carIgnition;
-
+    @Autowired
     private MotorStart motorStart;
 
     public void setCarIgnition(CarIgnition carIgnition) {

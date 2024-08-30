@@ -1,4 +1,4 @@
-package homework_02.src.app.carRide.Car.startOfMotor;
+package app.carRide.Car.startOfMotor;
 
 public class MotorStart {
 

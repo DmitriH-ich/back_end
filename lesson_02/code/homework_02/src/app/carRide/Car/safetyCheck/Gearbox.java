@@ -1,4 +1,4 @@
-package homework_02.src.app.carRide.Car.safetyCheck;
+package app.carRide.Car.safetyCheck;
 
 public class Gearbox {
 

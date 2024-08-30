@@ -1,4 +1,4 @@
-package homework_02.src.app.carRide.Car.MoveOfCar;
+package app.carRide.Car.MoveOfCar;
 
 public class Drive {
 

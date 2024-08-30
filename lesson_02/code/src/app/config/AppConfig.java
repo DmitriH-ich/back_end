@@ -9,7 +9,6 @@ import app.staff.specialists.production.Storekeeper;
 import app.staff.specialists.sales.Merchandiser;
 import app.staff.specialists.sales.SalesManager;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 // Алгоритм работы Спринга:

@@ -1,12 +1,14 @@
-package homework_02.src.app.carRide.driverSteps;
+package app.carRide.driverSteps;
 
-import homework_02.src.app.carRide.Car.MoveOfCar.Drive;
-import homework_02.src.app.carRide.Car.MoveOfCar.Gear;
+
+import app.carRide.Car.MoveOfCar.Drive;
+import app.carRide.Car.MoveOfCar.Gear;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class Step3 {
-
+    @Autowired
     private Gear gear;
-
+    @Autowired
     private Drive drive;
 
     public void setGear(Gear gear) {

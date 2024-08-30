@@ -1,4 +1,4 @@
-package homework_02.src.app.carRide.Car;
+package app.carRide.Car;
 
 public class Driver {
 
