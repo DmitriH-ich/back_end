@@ -1,7 +1,7 @@
 package de.ait_tr.g_36.controller;
 
 import de.ait_tr.g_36.domain.dto.ProductDto;
-import de.ait_tr.g_36.exception_nandling.Responce;
+import de.ait_tr.g_36.exception_nandling.Response;
 import de.ait_tr.g_36.exception_nandling.exceptions.FirstTestException;
 import de.ait_tr.g_36.service.interfaces.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -110,7 +110,7 @@ public class ProductController {
     // МИНУС - если нам не требуется разная логика для разных контроллеров,
     // придётся создавать такие обработчики в каждом контроллере отдельно
     @ExceptionHandler(FirstTestException.class)
-    public Responce handException(FirstTestException e){
-        return new Responce(e.getMessage());
+    public Response handException(FirstTestException e){
+        return new Response(e.getMessage());
     }
 }

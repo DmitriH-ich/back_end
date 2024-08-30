@@ -18,5 +18,4 @@ public class SecondTestException extends RuntimeException {
         super(message);
     }
 
-
 }

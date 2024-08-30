@@ -2,11 +2,9 @@ package de.ait_tr.g_36.security.security_config;
 
 
 import de.ait_tr.g_36.security.sec_filter.TokenFilter;
-//import io.swagger.v3.oas.annotations.info.Contact;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-//import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -43,11 +41,14 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable) // отключили базовую авторизацию
                 .addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class) // добавили свой фильтр TokenFilter
                 .authorizeHttpRequests(x -> x
-                        .requestMatchers(HttpMethod.GET, "/products/all").permitAll()
+                        // Lesson 17 выкл. для прогона exceptions
+/*                        .requestMatchers(HttpMethod.GET, "/products/all").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/products").hasRole("ADMIN") // добавлено правило для удаления
-                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/refresh").permitAll() // разрешаем всем доступ к этим endpoints
+                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/refresh").permitAll() // разрешаем всем доступ к этим endpoints*/
+                                .anyRequest().permitAll()
+
                 ).build();
     }
 }
